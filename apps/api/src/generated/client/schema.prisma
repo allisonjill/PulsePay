@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Payment {
+  id            String         @id @default(uuid())
+  amountCents   Int
+  currency      String
+  merchantId    String
+  status        String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  paymentEvents PaymentEvent[]
+}
+
+model PaymentEvent {
+  id          String   @id @default(uuid())
+  paymentId   String
+  payment     Payment  @relation(fields: [paymentId], references: [id])
+  type        String // PAYMENT_CREATED, PAYMENT_AUTHORIZED, etc.
+  amountCents Int?
+  metadata    String? // JSON string for flexibility
+  createdAt   DateTime @default(now())
+}

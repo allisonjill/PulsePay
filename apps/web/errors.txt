@@ -1,0 +1,1 @@
+﻿src/components/LiveFeed.tsx(8,11): error TS6133: 'endRef' is declared but its value is never read.
