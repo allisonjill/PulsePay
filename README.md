@@ -83,17 +83,27 @@ Strict TypeScript is used throughout. `Zod` handles runtime validation for all A
 - pnpm
 
 ### Setup
-```bash
-# 1. Install dependencies
-pnpm install
+1. **Configure Environment Variables**
+   Create a file at `apps/api/.env` with the following content:
+   ```env
+   DATABASE_URL="file:./dev.db"
+   ```
 
-# 2. Setup Database
-pnpm --filter api prisma:migrate
-pnpm --filter api seed
+2. **Install Dependencies**
+   ```bash
+   pnpm install
+   ```
 
-# 3. Start Development Server
-pnpm dev
-```
+3. **Setup Database**
+   ```bash
+   pnpm --filter api prisma:migrate
+   pnpm --filter api seed
+   ```
+
+4. **Start Development Server**
+   ```bash
+   pnpm -r --parallel dev
+   ```
 Access the web dashboard at `http://localhost:5173`.
 
 ### Running Tests
@@ -102,11 +112,23 @@ Access the web dashboard at `http://localhost:5173`.
 pnpm --filter api test
 ```
 
+## Troubleshooting FAQ
+
+**Q: My dashboard is empty.**
+- **A**: Make sure you have run the `seed` command (included in `prisma:migrate`) and that the **Simulator** has been started via the API or the UI.
+
+**Q: Prisma says "Environment variable not found: DATABASE_URL".**
+- **A**: Ensure you are in the project root and that `apps/api/.env` exists with the correct SQLite path.
+
+**Q: The shared package isn't being recognized.**
+- **A**: Run `pnpm install` again. This project uses `workspace:*` protocols which require `pnpm` to correctly link the local folders.
+
 ## Simulated Demo Script
 1. Open `http://localhost:5173/dashboard`.
 2. Notice the empty or static charts.
 3. Click "Simulator" in the sidebar (or top nav, depending on layout).
 4. Click "Start Simulator" (generates 1 payment/sec).
+   - Alternatively, start it via CLI: `curl -X POST http://localhost:4000/simulate/start`
 5. Watch the **Live Feed** update instantly.
 6. Navigate back to **Dashboard** and verify the "Total Payments" and "Volume" cards incrementing.
 7. Click **Refresh List** on the payments page to see the new rows.
